@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link, withRouter} from 'react-router-dom';
 import Rating from '../Rating/Rating';
 import BookmarksContext from '../BookmarksContext';
 import config from '../config';
@@ -6,11 +7,11 @@ import './BookmarkItem.css';
 import PropTypes from 'prop-types'
 
 function deleteBookmarkRequest(bookmarkId, callback) {
-  fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
+  fetch(config.API_ENDPOINT + `${bookmarkId}`, {
     method: 'DELETE',
     headers: {
       'content-type': 'application/json',
-      'authorization': `bearer ${config.API_KEY}`
+      'authorization': `Bearer ${config.API_KEY}`
     }
   })
   .then(res => {
@@ -19,7 +20,7 @@ function deleteBookmarkRequest(bookmarkId, callback) {
         throw error
       })
     }
-    return res.json()
+    return res
   })
   .then(data => {
     callback(bookmarkId)
@@ -30,7 +31,7 @@ function deleteBookmarkRequest(bookmarkId, callback) {
 }
 
 
-export default function BookmarkItem(props) {
+function BookmarkItem(props) {
   return (
     <BookmarksContext.Consumer>
       {(context) => (
@@ -38,7 +39,7 @@ export default function BookmarkItem(props) {
           <div className='BookmarkItem__row'>
             <h3 className='BookmarkItem__title'>
               <a
-                href={props.url}
+                href={props.bookmark_url}
                 target='_blank'
                 rel='noopener noreferrer'>
                 {props.title}
@@ -50,6 +51,11 @@ export default function BookmarkItem(props) {
             {props.description}
           </p>
           <div className='BookmarkItem__buttons'>
+            <button
+              onClick={() => props.history.push(`/edit-bookmark/${props.id}`)}
+            >
+              Edit
+            </button>
             <button
               className='BookmarkItem__description'
               onClick={() => {
@@ -71,7 +77,7 @@ export default function BookmarkItem(props) {
 
 BookmarkItem.defaultProps = {
   onClickDelete: () => {},
-  url: "",
+  bookmark_url: "",
   rating: 1,
   description: "",
   title: "",
@@ -79,7 +85,7 @@ BookmarkItem.defaultProps = {
 
 BookmarkItem.propTypes = {
   title: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
+  bookmark_url: PropTypes.string.isRequired,
   // url: (props, propName, componentName) => {
   //   // get the value of the prop
   //   const prop = props[propName];
@@ -103,3 +109,5 @@ BookmarkItem.propTypes = {
   rating: PropTypes.number,
   description: PropTypes.string
 };
+
+export default withRouter(BookmarkItem)

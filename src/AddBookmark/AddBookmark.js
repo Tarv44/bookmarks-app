@@ -17,10 +17,10 @@ class AddBookmark extends Component {
   handleSubmit = e => {
     e.preventDefault()
     // get the form fields from the event
-    const { title, url, description, rating } = e.target
+    const { title, bookmark_url, description, rating } = e.target
     const bookmark = {
       title: title.value,
-      url: url.value,
+      bookmark_url: bookmark_url.value,
       description: description.value,
       rating: rating.value,
     }
@@ -45,7 +45,7 @@ class AddBookmark extends Component {
       })
       .then(data => {
         title.value = ''
-        url.value = ''
+        bookmark_url.value = ''
         description.value = ''
         rating.value = ''
         this.context.addBookmark(data)
@@ -94,8 +94,8 @@ class AddBookmark extends Component {
             </label>
             <input
               type='url'
-              name='url'
-              id='url'
+              name='bookmark_url'
+              id='bookmark_url'
               placeholder='https://www.great-website.com/'
               required
             />

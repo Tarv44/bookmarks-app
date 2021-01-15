@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import AddBookmark from './AddBookmark/AddBookmark';
+import EditBookmark from './EditBookmark/EditBookmark';
 import BookmarkList from './BookmarkList/BookmarkList';
 import BookmarksContext from './BookmarksContext';
 import Nav from './Nav/Nav';
@@ -55,10 +56,23 @@ class App extends Component {
       .catch(error => this.setState({ error }))
   }
 
+  editBookmark = updatedBookmark => {
+    console.log('edit bookmark')
+    console.log(updatedBookmark)
+    const bookmarkList = this.state.bookmarks.map(bm =>
+      (bm.id !== updatedBookmark.id) ? bm : updatedBookmark
+    )
+    console.log(bookmarkList)
+    this.setState({
+      bookmarks: bookmarkList
+    })
+  }
+
   render() {
     const contextValue = {
       bookmarks: this.state.bookmarks,
       addBookmark: this.addBookmark,
+      editBookmark: this.editBookmark,
       deleteBookmark: this.deleteBookmark,
     }
     return (
@@ -77,6 +91,10 @@ class App extends Component {
               exact
               path='/'
               component={BookmarkList}
+            />
+            <Route 
+              path='/edit-bookmark/:id'
+              component={EditBookmark}
             />
           </div>
         </BookmarksContext.Provider>
